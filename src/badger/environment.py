@@ -102,7 +102,9 @@ class Environment(BaseModel, ABC):
         return self.interface.get_values(observable_names)
 
     def get_bounds(self, variable_names: List[str]) -> Dict[str, List[float]]:
-        return {}
+        # TODO implement way to get bounds on new vars
+        # TODO implement it here for all interfaces
+        return {v: [-1.0, 1.0] for v in variable_names}
 
     # Actions to preform after changing vars and before reading vars/obj
     def variables_changed(self, variables_input: Dict[str, float]):
@@ -158,12 +160,28 @@ class Environment(BaseModel, ABC):
             )
 
         # Heads-up to the users that this behavior is not allowed for now
-        err_msg = (
-            f"Variables [{variable_names_tmp}] "
-            + "not defined in the environment! "
-            + "Getting them through interface is not allowed."
-        )
-        raise BadgerInterfaceChannelError(err_msg)
+        # err_msg = (
+        #     f"Variables [{variable_names_tmp}] "
+        #     + "not defined in the environment! "
+        #     + "Getting them through interface is not allowed."
+        # )
+        # raise BadgerInterfaceChannelError(err_msg)
+        # TODO: one options is to implement trying to fetch temp vars from interface
+
+        # Try reading variable values from the interface
+        try:
+            variable_outputs_tmp = self.interface.get_values(variable_names_tmp)
+        except Exception:  # TODO: specify what exceptions could occur
+            raise Exception(f'Error reading variables {variable_names_tmp} from the interface!')
+
+
+        # Try adding to var list w/o bounds
+        for v in variable_names_tmp:
+            self.variable_names.append(variable_names_tmp)
+            self.variables[v] = []
+
+        return {**variable_outputs_def, **variable_outputs_tmp}
+
 
     # The reason for this method is we cannot know the bounds of a variable
     # that exists in interface but not defined in environment.
@@ -201,13 +219,24 @@ class Environment(BaseModel, ABC):
             )
             raise BadgerEnvVarError(err_msg)
 
-        # Heads-up to the users that this behavior is not allowed for now
-        err_msg = (
-            f"Variables [{variable_names_tmp}] "
-            + "not defined in the environment! "
-            + "Setting them through interface is not allowed."
-        )
-        raise BadgerInterfaceChannelError(err_msg)
+        # # Heads-up to the users that this behavior is not allowed for now
+        # err_msg = (
+        #     f"Variables [{variable_names_tmp}] "
+        #     + "not defined in the environment! "
+        #     + "Setting them through interface is not allowed."
+        # )
+        # raise BadgerInterfaceChannelError(err_msg)
+
+        # Need to define bounds first (right now making assumption
+        # that we are able to query or set them as +/-10% of current val
+        # Try adding to var list w/o bounds
+        for v in variable_names_tmp:
+            self.variable_names.append(variable_names_tmp)
+            self.variables[v] = []
+
+        self._set_variables_def(variable_inputs_tmp)
+
+
 
     # Optimizer will only call this method to get observable values
     @final

@@ -588,6 +588,10 @@ class BadgerRoutinePage(QWidget):
             return 1
 
         self.env_box.add_var(name, lb, ub)
+
+        # Add new vars and update table
+        self.env_box.var_table.selected[name] = False
+        self.env_box.var_table.update_variables(self.env_box.var_table.variables, 2)
         return 0
 
     def add_constraint(self, name=None, relation=0, threshold=0, critical=False):
