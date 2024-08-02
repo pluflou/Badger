@@ -221,6 +221,7 @@ class BadgerRoutinePage(QWidget):
 
         self.generator_box.cb.setCurrentIndex(idx_generator)
         # self.generator_box.edit.setPlainText(routine.generator.yaml())
+        # print("new routine 1 ", routine) # HERE
         filtered_config = filter_generator_config(
             name_generator, routine.generator.model_dump())
         self.generator_box.edit.setPlainText(get_yaml_string(filtered_config))
@@ -624,6 +625,7 @@ class BadgerRoutinePage(QWidget):
     def _compose_vocs(self) -> (VOCS, list[str]):
         # Compose the VOCS settings
         variables = self.env_box.var_table.export_variables()
+        print("vars into vocs ", variables)
         objectives = self.env_box.obj_table.export_objectives()
 
         constraints = {}

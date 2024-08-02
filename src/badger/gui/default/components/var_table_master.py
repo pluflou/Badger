@@ -4,10 +4,8 @@ from PyQt5.QtWidgets import (
     QHeaderView,
     QAbstractItemView,
     QCheckBox,
-    QApplication,
-    QLineEdit
 )
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal
 from .robust_spinbox import RobustSpinBox
 
 
@@ -28,7 +26,7 @@ class VariableTable(QTableWidget):
         self.setColumnCount(4)
         self.setAlternatingRowColors(True)
         self.setStyleSheet("alternate-background-color: #262E38;")
-        #self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         self.verticalHeader().setVisible(False)
         header = self.horizontalHeader()
@@ -91,7 +89,6 @@ class VariableTable(QTableWidget):
         for i in range(self.rowCount()):
             _cb = self.cellWidget(i, 0)
             name = self.item(i, 1).text()
-            print(name)
             self.selected[name] = _cb.isChecked()
 
         self.sig_sel_changed.emit()
@@ -163,7 +160,7 @@ class VariableTable(QTableWidget):
         else:
             _variables = variables
 
-        n = len(_variables) + 1
+        n = len(_variables)
         self.setRowCount(n)
         for i, var in enumerate(_variables):
             name = next(iter(var))
@@ -174,9 +171,7 @@ class VariableTable(QTableWidget):
             _cb = self.cellWidget(i, 0)
             _cb.setChecked(self.is_checked(name))
             _cb.stateChanged.connect(self.update_selected)
-            item = QTableWidgetItem(name)
-            item.setFlags(item.flags() | ~Qt.ItemIsEditable) # TODO: not working
-            self.setItem(i, 1, item)
+            self.setItem(i, 1, QTableWidgetItem(name))
 
             _bounds = self.bounds[name]
             sb_lower = RobustSpinBox(
@@ -189,22 +184,6 @@ class VariableTable(QTableWidget):
             sb_upper.valueChanged.connect(self.update_bounds)
             self.setCellWidget(i, 2, sb_lower)
             self.setCellWidget(i, 3, sb_upper)
-        try:
-            for i in range(self.rowCount()):
-                print("final items ", self.item(i, 1).text())
-        except AttributeError:
-            pass
-
-        # Make extra editable row
-        item = QTableWidgetItem("Enter new PV here") # TODO make gray-ish color
-        item.setFlags(item.flags() | Qt.ItemIsEditable)
-        self.setItem(i+1, 1, item)
-        # self.setCellWidget(i+1, 0, QCheckBox())
-        # _cb = self.cellWidget(i+1, 0)
-        # _cb.setChecked(False)
-        # _cb.stateChanged.connect(self.update_selected)
-
-
 
         self.setHorizontalHeaderLabels(["", "Name", "Min", "Max"])
         self.setVerticalHeaderLabels([str(i) for i in range(n)])
@@ -214,24 +193,6 @@ class VariableTable(QTableWidget):
         header.setVisible(True)
 
         self.sig_sel_changed.emit()
-        # self.add_new_variable()
-
-    def add_new_variable(self):
-        # Check last row for new variable added
-        idx = self.rowCount()
-        try:
-            name = self.item(idx, 1).text()
-            print("string ", name)
-
-            # TODO: check if name is valid first
-            # _cb = self.cellWidget(idx, 0)
-            # _cb.setChecked(True)
-            # _cb.stateChanged.connect(self.update_selected)
-
-            self.variables.append(name)
-        except AttributeError:
-            # No text in cell
-            return
 
     def add_variable(self, name, lb, ub):
         var = {}

@@ -46,6 +46,7 @@ class TableWithCopy(QTableWidget):
 
 
 def update_table(table, data=None):
+    print("data ", data)
     table.setRowCount(0)
     table.horizontalHeader().setVisible(False)
 
@@ -99,6 +100,7 @@ def data_table(data=None):
 
 
 def init_data_table(variable_names=None):
+    print(" init ", variable_names)
     table = TableWithCopy()
     table.setAlternatingRowColors(True)
     table.setStyleSheet(stylesheet)
@@ -143,7 +145,9 @@ def get_table_content_as_dict(table):
 
 
 def update_init_data_table(table, variable_names):
+    print("vars ", variable_names)
     current_init_data = get_table_content_as_dict(table)
+    print("table ", current_init_data)
 
     table.setColumnCount(len(variable_names))
     table.horizontalHeader().setVisible(False)
