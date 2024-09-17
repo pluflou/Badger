@@ -99,11 +99,11 @@ jobs:
         run: |
           python -m build --sdist --outdir dist/ .
 
-#  delete-cancelled-runs:
-#    # https://github.com/orgs/community/discussions/8336
-#    # See https://github.com/MercuryTechnologies/delete-cancelled-runs
-#    runs-on: 'ubuntu-latest'
-#    steps:
-#      - uses: 'MercuryTechnologies/delete-cancelled-runs@latest'
-#        with:
-#          workflow-file: 'tests.yml'
+  delete-cancelled-runs:
+    # https://github.com/orgs/community/discussions/8336
+    # See https://github.com/MercuryTechnologies/delete-cancelled-runs
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'MercuryTechnologies/delete-cancelled-runs@latest'
+        with:
+          workflow-file: 'tests.yml'
