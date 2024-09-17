@@ -12,13 +12,14 @@ on:
     #        │ │ │ │ │
     - cron: '0 0 * * *'
 
-concurrency:
-  group: ${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+#concurrency:
+#  group: ${{ github.head_ref || github.ref_name }}
+#  cancel-in-progress: true
 
 jobs:
 
   test:
+    if: ${{ github.repository == 'pluflou/Badger' }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
