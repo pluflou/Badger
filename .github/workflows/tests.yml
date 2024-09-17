@@ -12,12 +12,11 @@ on:
     #        │ │ │ │ │
     - cron: '0 0 * * *'
 
-concurrency:
+concurrency: #  limit a workflow to one run at a time (push/pr)
   group: ${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-
   test:
     runs-on: ${{ matrix.os }}
     defaults:
@@ -99,3 +98,12 @@ jobs:
       - name: Build a source tarball
         run: |
           python -m build --sdist --outdir dist/ .
+
+#  delete-cancelled-runs:
+#    # https://github.com/orgs/community/discussions/8336
+#    # See https://github.com/MercuryTechnologies/delete-cancelled-runs
+#    runs-on: 'ubuntu-latest'
+#    steps:
+#      - uses: 'MercuryTechnologies/delete-cancelled-runs@latest'
+#        with:
+#          workflow-file: 'tests.yml'
