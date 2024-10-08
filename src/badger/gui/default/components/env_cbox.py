@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QPlainTextEdit, QLineEdit
-from PyQt5.QtWidgets import QComboBox, QCheckBox, QStyledItemDelegate, QLabel, QListWidget, QFrame
+from PyQt5.QtWidgets import QCheckBox, QStyledItemDelegate, QLabel, QListWidget, QFrame
 from PyQt5.QtCore import QRegExp
 
 from .collapsible_box import CollapsibleBox
 from .var_table import VariableTable
 from .obj_table import ObjectiveTable
-from .data_table import init_data_table, update_init_data_table
+from .data_table import init_data_table
 from ..utils import MouseWheelWidgetAdjustmentGuard, NoHoverFocusComboBox
 from ....settings import read_value, AUTO_REFRESH
 from ....utils import strtobool
